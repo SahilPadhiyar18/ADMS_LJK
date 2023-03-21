@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %} Login {% endblock %}
+
+{% block content %}
+<br><br><br><br>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      {% include 'includes/messages.html' %}
+    </div>
+  </div>
+    <form method="post" enctype="multipart/form-data" action="{% url 'signup' %}">
+      {% csrf_token %}
+        <div class="form-group">
+            <label for="exampleInputEmail1">Username</label>
+            <input name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Username">
+        </div><br>
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+        </div><br>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" name="password1" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div><br>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Confirm Password</label>
+            <input type="password" name="password2" class="form-control" id="exampleInputPassword1" placeholder="Password">
+          </div><br>
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+      </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,13 @@
+<nav class="navbar navbar-dark bg-dark">
+        
+    <div class="container-fluid">
+
+    {% if user.is_authenticated %}
+    <a href="{% url 'logout' %}"  style="text-decoration: none;">Logout</a>
+    {% else %}
+    <a href="{% url 'login' %}" style="position:absolute; left: 6%; text-decoration: none;">Login</a>
+    <a href="{% url 'signup' %}" style="text-decoration: none;">Register</a>
+    
+    {% endif %}
+    </div>
+</nav>
