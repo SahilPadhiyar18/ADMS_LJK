@@ -5,8 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 
 
-def home(request):
-    return render(request, 'main_templates/home.html')
+
 
 
 def user_login(request):
@@ -21,7 +20,14 @@ def user_login(request):
             # messages.success(request, 'you are logged in...')
             return redirect('home')
         else:
-            messages.warning(request, 'invalid crendentials')
+            try:
+                _user = User.objects.get(email=email)
+            except Exception as e:
+                _user = None
+            if _user:
+                 messages.warning(request, 'invalid crendentials')
+            else:
+                 messages.warning(request, 'don"t have account an account ! please create one')     
             return redirect('login')
     return render(request, 'accounts/login.html')
 

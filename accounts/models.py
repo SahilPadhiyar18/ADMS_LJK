@@ -45,7 +45,7 @@ class User(AbstractBaseUser):
     )
 
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    username = models.CharField(max_length=200)
+    username = models.CharField(max_length=200, unique=True)
     email = models.EmailField(
         verbose_name='Email',
         max_length=255,
@@ -66,7 +66,7 @@ class User(AbstractBaseUser):
 
 
     def __str__(self):
-        return self.email
+        return self.username
     
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
