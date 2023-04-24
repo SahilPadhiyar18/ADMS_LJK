@@ -9,5 +9,5 @@ def rooms_ac(room, user):
         room = Room.objects.get(room_id=room.room_id)
         return AC.objects.filter(room=room)
     else:
-        room = Room.objects.get(room_id=room.room_id)
-        return AC.objects.filter(room=room).filter(user=user)
+        room = Room.objects.get(room_id=room.room_id, user=user)
+        return AC.objects.filter(room=room)

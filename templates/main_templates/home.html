@@ -25,15 +25,19 @@
 
               <div class="form-check form-switch col-4">
                 <label class="" for="">ON/OFF</label>
-                {% if ac.ac_esp %}
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked
-                  onclick="acToggle(this, 'ac_esp')" value={{ac.ac_uuid}}>
+                {% if ac.lock %}
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
                 {% else %}
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-                onclick="acToggle(this, 'ac_esp')" value={{ac.ac_uuid}}>
+                  {% if ac.ac_esp %}
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked
+                    onclick="acToggle(this, 'ac_esp')" value={{ac.ac_uuid}}>
+                  {% else %}
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                  onclick="acToggle(this, 'ac_esp')" value={{ac.ac_uuid}}>
+                  {% endif %}
                 {% endif %}
               </div>
-
+               {% if user.is_admin %} 
               <div class="form-check form-switch col-4">
                 <label class="" for="">LOCK</label>
                 {% if ac.lock %}
@@ -44,7 +48,7 @@
                 onclick="acToggle(this, 'ac_lock')" value={{ac.ac_uuid}}>
                 {% endif %}
               </div>
-
+              {% endif %}
               <div class="col-8">
                 <small class="" for="">Ping:</small>
                 <small class="text-muted">{{ac.ping}}</small>

@@ -29,6 +29,7 @@ class UserManager(BaseUserManager):
             email=email,
             password=password,
         )
+        user.set_password(password)
         user.user_type = 1
         user.is_admin = True
         user.is_superuser = True

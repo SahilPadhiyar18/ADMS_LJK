@@ -6,7 +6,11 @@ import json
 
 @login_required(login_url='login')
 def home(request):
-    room_data = Room.objects.all()
+    if request.user.is_admin:
+        room_data = Room.objects.all()
+    else:
+        room_data = Room.objects.filter(user=request.user)    
+        
     ac_data = AC.objects.all()
     context = {
         'rooms': room_data,
