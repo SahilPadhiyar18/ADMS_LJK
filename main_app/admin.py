@@ -5,5 +5,7 @@ from .models import *
 admin.site.register(AC)
 admin.site.register(Circuit)
 admin.site.register(Room)
+admin.site.register(UserRoomAssign)
+
 
 

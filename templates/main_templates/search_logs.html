@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %} Logs {% endblock %}
+
+{% block content %}
+
+<br>
+<div class="d-flex justify-content-center">
+  <form class="form-inline" method="post" action="{% url 'logs' %}">
+    {% csrf_token %}
+    <div class="input-group">
+      <!-- <input class="form-control me-2" type="search" placeholder="Type AC Name.." aria-label="Search" name="ac_name"> -->
+      <input class="form-control me-2 {% if request.POST.ac_name %}readonly{% endif %}" type="search" placeholder="Type AC Name.." aria-label="Search" name="ac_name" {% if request.POST.ac_name %}readonly{% endif %} value="{{ request.POST.ac_name }}">
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </div>
+  </form>
+</div>
+
+<br><br>
+<div class="container">
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col" style="text-align: center;">No.</th>
+                <th scope="col" style="text-align: center;">AC Name</th>
+                <th scope="col" style="text-align: center;">Task</th>
+                <th scope="col" style="text-align: center;">On By</th>
+                <th scope="col" style="text-align: center;">Off By</th>
+                <th scope="col" style="text-align: center;">Status</th>
+                <th scope="col" style="text-align: center;">On Time</th>
+                <th scope="col" style="text-align: center;">Off Time</th>
+                <th scope="col" style="text-align: center;">Total On Time</th>
+                <th scope="col" style="text-align: center;">Total AC Working Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <th scope="row">{{log.id}}</th>
+                {% if log.ac_name %}
+                <td style="text-align: center;">{{log.ac_name}}</td>
+                {% else %}
+                <td style="text-align: center;">-</td>
+                {% endif %}
+
+                {% if log.task %}
+                <td style="text-align: center;">{{log.task}}</td>
+                {% else %}
+                <td style="text-align: center;">-</td>
+                {% endif %}
+
+                {% if log.on_by %}
+                <td style="text-align: center;">{{log.on_by}}</td>
+                {% else %}
+                <td style="text-align: center;">-</td>
+                {% endif %}
+
+                {% if log.off_by %}
+                <td style="text-align: center;">{{log.off_by}}</td>
+                {% else %}
+                <td style="text-align: center;">-</td>
+                {% endif %}
+
+                {% if log.status %}
+                <td style="text-align: center;">{{log.status}}</td>
+                {% else %}
+                <td style="text-align: center;">-</td>
+                {% endif %}
+
+                {% if log.on_time %}
+                <td style="text-align: center;">{{log.on_time}}</td>
+                {% else %}
+                <td style="text-align: center;">-</td>
+                {% endif %}
+
+                {% if log.off_time %}
+                <td style="text-align: center;">{{log.off_time}}</td>
+                {% else %}
+                <td style="text-align: center;">-</td>
+                {% endif %}
+
+                {% if log.total_on_time %}
+                <td style="text-align: center;">{{log.formatted_total_on_time}}</td>
+                {% else %}
+                <td style="text-align: center;">-</td>
+                {% endif %}
+
+                {% if log.total_ac_working_hours %}
+                <td style="text-align: center;">{{log.formatted_total_ac_working_hours}}</td>
+                {% else %}
+                <td style="text-align: center;">-</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="container" >
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            {% if logs.has_previous %}
+            <a class="page-link" href="?page={{ logs.previous_page_number }}?search=true?ac_name={{request.POST.ac_name}}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <!-- <span class="sr-only">Previous</span> -->
+            </a>
+            {% endif %}
+          </li>
+          <li class="page-item"><a class="page-link" href="#">{{logs.number}}</a></li>
+          <li class="page-item">
+            {% if logs.has_next %}
+            <a class="page-link" href="?page={{ logs.next_page_number }}&search=true?ac_name={{request.POST.ac_name}}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <!-- <span class="sr-only">Next</span> -->
+            </a>
+            {% endif %}
+          </li>
+        </ul>
+      </nav>
+</div>
+
+{% endblock %}

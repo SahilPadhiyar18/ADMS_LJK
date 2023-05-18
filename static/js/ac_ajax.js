@@ -9,6 +9,7 @@ function acToggle(data, field) {
         data: {'ac_uuid':data.value,'field':field ,'status': data.checked},
         success: (data) => {
           console.log(data);
+          location.reload();
         },
         error: (error) => {
           console.log(error);

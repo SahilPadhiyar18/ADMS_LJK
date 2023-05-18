@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .models import Room, AC
 from django.contrib.auth.decorators import login_required
 import json
+from .utils import save_logs_to_db
+
 # Create your views here.
 
 @login_required(login_url='login')
@@ -31,8 +33,29 @@ def change_ac_status(request):
                 ac.ac_esp = status
             elif field == 'ac_lock':
                 ac.lock = status
-            ac.save()    
+            ac.save()
+            save_logs_to_db(request, ac, field, status)
             return redirect('home')
         except Exception as e:
             print(e)
             return redirect('home')
+        
+def get_acs_of_room(request, room_id):
+    room = Room.objects.get(room_id=room.room_id, user=request.user)
+    acs =  AC.objects.filter(room=room).order_by('created_at')
+    acs_json = {}
+    for ac in acs:
+        acs_json[ac.name] = {
+            'uuid': ac.ac_uuid.urn[9:],
+            'room': ac.room.room_id,
+            'circuit': ac.circuit.esp_id,
+            'ac_esp': ac.ac_esp,
+            'lock': ac.lock,
+            'ping': ac.ping.strftime('%Y-%m-%d %H:%M:%S'),
+            'status': ac.status,
+            'created_at': ac.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'updated_at': ac.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+    final_json = json.dumps(acs_json)
+    
+    return final_json    

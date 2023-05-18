@@ -1,0 +1,14 @@
+.hide{
+    position: absolute;
+    top: 6px;
+    left: 130px;
+    display: none;
+    color: red;
+}
+
+.form-check:hover .hide {
+    display: block;
+}         
+
+
+ 
