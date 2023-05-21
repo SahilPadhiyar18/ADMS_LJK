@@ -9,13 +9,13 @@ from django.shortcuts import redirect
 @login_required(login_url='login')
 def logs_view(request):
     if request.user.is_admin:
-        check_user_assign_time_for_ac()
+        # check_user_assign_time_for_ac()
         if request.method == 'POST' and request.POST['ac_name']: 
             ac_name = request.POST['ac_name']
-            logs = Logs.objects.filter(ac_name=ac_name.upper()).order_by('-updated_at')
+            logs = Logs.objects.filter(ac_name=ac_name.upper()).order_by('-id')
             template_name = 'main_templates/search_logs.html'
         else:    
-            logs = Logs.objects.all().order_by('-updated_at')
+            logs = Logs.objects.all().order_by('-id')
             template_name = 'main_templates/logs.html'
 
         paginator = Paginator(logs, 12) 

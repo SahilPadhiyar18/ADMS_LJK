@@ -9,8 +9,7 @@
   <form class="form-inline" method="post" action="{% url 'logs' %}">
     {% csrf_token %}
     <div class="input-group">
-      <!-- <input class="form-control me-2" type="search" placeholder="Type AC Name.." aria-label="Search" name="ac_name"> -->
-      <input class="form-control me-2 {% if request.POST.ac_name %}readonly{% endif %}" type="search" placeholder="Type AC Name.." aria-label="Search" name="ac_name" {% if request.POST.ac_name %}readonly{% endif %} value="{{ request.POST.ac_name }}">
+      <input class="form-control me-2" type="search" placeholder="Type AC Name.." aria-label="Search" name="ac_name">
       <button class="btn btn-outline-success" type="submit">Search</button>
     </div>
   </form>
