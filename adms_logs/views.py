@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import Logs
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from main_app.utils import check_user_assign_time_for_ac
+# from main_app.utils import check_user_assign_time_for_ac
 from django.shortcuts import redirect
 # Create your views here.
 

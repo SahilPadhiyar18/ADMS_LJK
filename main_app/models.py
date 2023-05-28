@@ -1,15 +1,15 @@
+import datetime
+
 from django.db import models
 import uuid
 from accounts.models import User
 from django.utils import timezone
 
-from django.db.models.signals import m2m_changed
-from django.dispatch import receiver
 # Create your models here.
 
     
 class Room(models.Model):
-    user = models.ManyToManyField(User, blank=True, editable=False)
+    user = models.ManyToManyField(User, blank=True)
     room_uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
     room_id = models.CharField(max_length=255, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -35,7 +35,8 @@ class Room(models.Model):
     def clean(self):
         if self.pk and self.user.exists():
             return        
-    
+
+
 class Circuit(models.Model):
     ckt_uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
     panel_id = models.CharField(max_length=255)
@@ -60,6 +61,7 @@ class Circuit(models.Model):
         else:
             super().save(*args, **kwargs)    
     
+
 class AC(models.Model):
     ac_uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
     room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True, blank=True)
@@ -69,10 +71,11 @@ class AC(models.Model):
     lock = models.BooleanField(default=False)
     ping = models.DateTimeField()
     status = models.BooleanField(default=False)
+    no = models.IntegerField(blank=True, null=True)
+    total_ac_working_hours = models.DurationField(null=True, blank=True, default=datetime.timedelta(hours=0, minutes=0, seconds=0))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True) 
 
-   
     def __str__(self):
         return f"{self.name} - {self.room.room_id} - {self.circuit.esp_id}"
     
@@ -91,6 +94,7 @@ class AC(models.Model):
         
         self.name = self.name.upper()
         if not is_new_obj:
+            self.no = AC.objects.filter(circuit=self.circuit).count() + 1
             if self.name and AC.objects.filter(name=self.name).exists():
                 return
             if AC.objects.filter(circuit=self.circuit).count() >= 3:
@@ -100,34 +104,8 @@ class AC(models.Model):
             super().save(*args, **kwargs)
         
         
-class UserRoomAssign(models.Model):
-    user = models.ManyToManyField(User, blank=True)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True, blank=True)
-    duration = models.DurationField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True) 
 
-    def __str__(self):
-        return f"{self.room} - ({self.duration})"
-    
-    def get_created_at_time(self):
-        return timezone.localtime(self.created_at)
-    
-    def get_updated_at_time(self):
-        return timezone.localtime(self.updated_at)
- 
-    def save(self, *args, **kwargs):
-        timezone.activate('Asia/Kolkata')
-        self.created_at = timezone.localtime(self.created_at)
-        self.updated_at = timezone.localtime(timezone.now())
-        super().save(*args, **kwargs)
         
       
-@receiver(m2m_changed, sender=UserRoomAssign.user.through)
-def userroomassign_users_changed(sender, instance, action, **kwargs):
-    room = instance.room
-   
-    if action == 'post_add' or action == 'post_clear':
-        users = instance.user.all()
-        room.user.set(users)    
+
             

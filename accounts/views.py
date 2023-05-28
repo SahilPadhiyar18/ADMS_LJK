@@ -11,49 +11,59 @@ from django.utils.http import urlsafe_base64_decode
 
 
 def user_login(request):
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
+    try:
+        if request.method == 'POST':
+            email = request.POST['email']
+            password = request.POST['password']
 
-        user = authenticate(email=email, password=password)
+            user = authenticate(email=email, password=password)
 
-        if user is not None:
-            login(request, user)
-            # messages.success(request, 'you are logged in...')
-            return redirect('home')
-        else:
-            try:
-                _user = User.objects.get(email=email)
-            except Exception as e:
-                _user = None
-            if _user:
-                 messages.warning(request, 'invalid crendentials')
+            if user is not None:
+                login(request, user)
+                # messages.success(request, 'you are logged in...')
+                return redirect('home')
             else:
-                 messages.warning(request, 'don"t have account an account ! please create one')     
-            return redirect('login')
-    return render(request, 'accounts/login.html')
+                try:
+                    _user = User.objects.get(email=email)
+                except Exception as e:
+                    _user = None
+                if _user:
+                     messages.warning(request, 'invalid crendentials')
+                else:
+                     messages.warning(request, 'don\'t have an account ! please create one')
+                return redirect('login')
+        return render(request, 'accounts/login.html')
+    except Exception as e:
+        return render(request, 'accounts/login.html')
 
 
 def signUp(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        email = request.POST['email']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-        if User.objects.filter(email=email).exists():
-            messages.warning(request, 'email already exists')
-            return redirect("signup")
-        else:
-            if password1 == password2:
-                user = User.objects.create_user(username=username, email=email,  password=password1)
-                user.save()
-                messages.success(request, 'Account created successfully')
-                return redirect("login")
+    try:
+        if request.method == 'POST':
+            username = request.POST['username']
+            email = request.POST['email']
+            password1 = request.POST['password1']
+            password2 = request.POST['password2']
+            if User.objects.filter(username=username).exists():
+                messages.warning(request, 'username already exists')
+                return redirect("signup")
+            elif User.objects.filter(email=email).exists():
+                messages.warning(request, 'email already exists')
+                return redirect("signup")
             else:
-                messages.warning(request, 'passwords does not match')
-                return redirect('signup')
-        
-    return render(request, 'accounts/signup.html')
+                if password1 == password2:
+                    user = User.objects.create_user(username=username, email=email,  password=password1)
+                    user.save()
+                    messages.success(request, 'Account created successfully')
+                    return redirect("login")
+                else:
+                    messages.warning(request, 'passwords does not match')
+                    return redirect('signup')
+
+        return render(request, 'accounts/signup.html')
+    except Exception as e:
+        return render(request, 'accounts/signup.html')
+
 
 
 def user_logout(request):

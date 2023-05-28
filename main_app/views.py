@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from .models import Room, AC
 from django.contrib.auth.decorators import login_required
 import json
-from .utils import save_logs_to_db
+from .utils import *
+from django.http import JsonResponse
+
 
 # Create your views here.
 
@@ -23,39 +25,56 @@ def home(request):
 
 @login_required(login_url='login')
 def change_ac_status(request):
-    if request.method == 'GET':
-        try:
-            ac_uuid = request.GET.get('ac_uuid')
-            field = request.GET.get('field')
-            status = json.loads(request.GET.get('status'))
-            ac = AC.objects.get(ac_uuid=ac_uuid)
-            if field == 'ac_esp':
-                ac.ac_esp = status
-            elif field == 'ac_lock':
-                ac.lock = status
-            ac.save()
-            save_logs_to_db(request, ac, field, status)
-            return redirect('home')
-        except Exception as e:
-            print(e)
-            return redirect('home')
+    try:
+        if request.method == 'GET':
+            try:
+                ac_uuid = request.GET.get('ac_uuid')
+                field = request.GET.get('field')
+                status = json.loads(request.GET.get('status'))
+                ac = AC.objects.get(ac_uuid=ac_uuid)
+                if field == 'ac_esp':
+                    ac.ac_esp = status
+                elif field == 'ac_lock':
+                    ac.lock = status
+                ac.save()
+                if status:
+                    make_user_ac_assign_obj(request,  ac)
+                else:
+                    delete_user_ac_after_off_status(ac)
+
+                save_logs_to_db(request, ac, field, status)
+                return redirect('home')
+            except Exception as e:
+                print(e)
+                return redirect('home')
+    except Exception as e:
+        print(f"Exception occur in change_ac_status function: {e}")
         
-def get_acs_of_room(request, room_id):
-    room = Room.objects.get(room_id=room.room_id, user=request.user)
-    acs =  AC.objects.filter(room=room).order_by('created_at')
-    acs_json = {}
-    for ac in acs:
-        acs_json[ac.name] = {
-            'uuid': ac.ac_uuid.urn[9:],
-            'room': ac.room.room_id,
-            'circuit': ac.circuit.esp_id,
-            'ac_esp': ac.ac_esp,
-            'lock': ac.lock,
-            'ping': ac.ping.strftime('%Y-%m-%d %H:%M:%S'),
-            'status': ac.status,
-            'created_at': ac.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-            'updated_at': ac.updated_at.strftime('%Y-%m-%d %H:%M:%S')
-        }
-    final_json = json.dumps(acs_json)
-    
-    return final_json    
+
+def acupdate(request):
+    try:
+        esp_id = request.GET['espid']
+        circuit = Circuit.objects.filter(esp_id=esp_id.upper()).exists()
+        if circuit:
+            ac1cur = request.GET['ac1cur']
+            ac2cur = request.GET['ac2cur']
+            ac3cur = request.GET['ac3cur']
+            if AC.objects.filter(circuit__esp_id=esp_id, no=1).exists():
+                ac1 = AC.objects.get(circuit__esp_id=esp_id, no=1)
+                ac1.ac_esp = bool(request.GET['ac1'])
+                ac1.ping = timezone.localtime()
+                ac1.save()
+            if AC.objects.filter(circuit__esp_id=esp_id, no=2).exists():
+                ac2 = AC.objects.get(circuit__esp_id=esp_id, no=2)
+                ac2.ac_esp = bool(request.GET['ac2'])
+                ac2.ping = timezone.localtime()
+                ac2.save()
+            if AC.objects.filter(circuit__esp_id=esp_id, no=3).exists():
+                ac3 = AC.objects.get(circuit__esp_id=esp_id, no=3)
+                ac3.ac_esp = bool(request.GET['ac3'])
+                ac3.ping = timezone.localtime()
+                ac3.save()
+            print('all acs are updated successfully')
+            return JsonResponse(list(AC.objects.filter(circuit__esp_id=esp_id).values('no', 'ac_esp')), safe=False)
+    except Exception as e:
+        print(f"Exception occur in acupdate function: {e}")

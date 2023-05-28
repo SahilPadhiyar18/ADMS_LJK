@@ -25,7 +25,10 @@ class Logs(models.Model):
     
     def formatted_total_ac_working_hours(self):
         return str(self.total_ac_working_hours).split('.')[0]
-    
+
+    def get_ist_on_time(self):
+        return timezone.localtime(self.on_time)
+
     def save(self, *args, **kwargs):
         timezone.activate('Asia/Kolkata')
         self.created_at = timezone.localtime(self.created_at)
