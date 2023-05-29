@@ -106,6 +106,9 @@ def delete_user_ac_after_off_status(ac):
                                                                          is_time_over=False)
                     room_duration_over.remain_duration = room_duration_over.remain_duration - (ac_assign_obj.get_endTime() - ac_assign_obj.get_startTime())
                     room_duration_over.save()
+
+                    room_assign.remain_duration = room_duration_over.remain_duration
+                    room_assign.save()
             except Exception as e:
                 print(f"Exception in delete_user_ac_after_off_status function: {e}")
 
@@ -148,6 +151,9 @@ def user_assign_duration_calculation():
                             room_duration_over.save()
                             user_ac.ac.save()
                             user_ac.delete()
+
+                            user_room.remain_duration = room_duration_over.remain_duration
+                            user_room.save()
 
                             if room_duration_over.remain_duration <= datetime.timedelta(hours=0, minutes=0, seconds=0):
                                 room_duration_over.is_time_over = True

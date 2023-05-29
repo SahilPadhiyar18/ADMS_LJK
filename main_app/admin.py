@@ -16,7 +16,7 @@ class RoomAdmin(admin.ModelAdmin):
 
 
 class ACAdmin(admin.ModelAdmin):
-    readonly_fields = ('no',)
+    readonly_fields = ('no', 'total_ac_working_hours')
     form = ACForm
     list_display = ('name', 'room', 'circuit', 'ac_esp', 'lock', 'total_ac_working_hours')
     search_fields = ['name', 'room__room_id', 'circuit__esp_id']

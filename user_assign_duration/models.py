@@ -7,6 +7,7 @@ class UserRoomAssign(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True, blank=True)
     duration = models.DurationField(blank=True, null=True)
+    remain_duration = models.DurationField(blank=True, null=True, default=duration)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
