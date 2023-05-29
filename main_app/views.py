@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 import json
 from .utils import *
 from django.http import JsonResponse
-
+from django.db.models import F
 
 # Create your views here.
 
@@ -75,6 +75,6 @@ def acupdate(request):
                 ac3.ping = timezone.localtime()
                 ac3.save()
             print('all acs are updated successfully')
-            return JsonResponse(list(AC.objects.filter(circuit__esp_id=esp_id).values('no', 'ac_esp')), safe=False)
+            return JsonResponse(list(AC.objects.filter(circuit__esp_id=esp_id).values('no', value=F('ac_esp'))), safe=False)
     except Exception as e:
         print(f"Exception occur in acupdate function: {e}")
