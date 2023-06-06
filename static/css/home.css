@@ -1,0 +1,23 @@
+.card-font{
+    font-size: 20px;
+}
+.toggle-style{
+  /* Increase the size */
+  transform: scale(1.4);
+}
+
+.bigger-switch {
+    /* Increase the size */
+    transform: scale(2);
+    transform-origin: left center;
+  }
+  
+  .toggle-style:checked {
+    /* Change the border color when checked */
+    border-color: black;
+  }
+
+  .label-name-style{
+    top: -3px;
+    position: relative;
+  }

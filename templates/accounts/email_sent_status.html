@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block title %} Send Email {% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/account_style.css' %}">
+
+
+<div class="custom-container">
+    <div class="form">
+        <div class="logo" >
+            <img src="{% static 'img/ljku.jpg' %}">
+        </div>
+      <header>Forgot password</header>
+      <!-- <p class="email-sent-status">Your Provided email id is not registered, Please first sign up and create an account <a href="">here</a>.</p> -->
+      <!-- <p class="email-sent-status">Email Sent to your email id, Please check your email.</p> -->
+      {{msg}}
+      <a href="{% url 'login' %}">
+        <input type="button" class="button" value="Login">
+      </a>
+    </div>
+  </div>
+
+
+
+{% endblock %}

@@ -105,12 +105,12 @@ def forgot_password(request):
             context = {
                 'msg': 'Password Reset Link hase been sent to your email address!  Please check your email'
             }
-            return render(request, 'accounts/send_email.html', context)
+            return render(request, 'accounts/email_sent_status.html', context)
         else:
             context = {
                 'msg': 'We don\'t have a user having given email address.'
             }
-            return render(request, 'accounts/send_email.html', context)
+            return render(request, 'accounts/email_sent_status.html', context)
 
     return render(request, 'accounts/forgot_password.html')
 

@@ -1,44 +1,47 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %} Home {% endblock %}
 
 {% block content %}
 {% load ac_filters %}
+    {% include 'includes/navbar.html' %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
 <br><br>
 <div class="container">
   <div class="row gy-5">
     {% for room in rooms %}
     
     <div class="col-md-4">
-      <div class="card" >
+      <div class="card" style="border-radius: 20px;">
         {% if room|room_color:request.user %}
 
-          <div class="card-body" style="background-color: #C4A484;">
+          <div class="card-body" style="background-color: darkgray;">
             <p class="card-text text-center" style="margin-bottom: 1px;">This room's allocated time is over.</p>
-            <h5 class="card-title text-center">ROOM NO: {{room.room_id}}</h5>
+            <h5 class="card-title text-center card-font">ROOM NO: {{room.room_id}}</h5>
           </div>
          {% for ac in  room|rooms_ac:request.user %}
           <ul class="list-group list-group-flush">
-          <li class="list-group-item" style="background-color: #C4A484;">
+          <li class="list-group-item" style="background-color: darkgray;">
             <div class="row">
               <div class="col">
-                <label class="h6" for="">{{ ac.name }}</label>
+                <label class="h6 card-font" for="">{{ ac.name }}</label>
               </div>
 
               <div class="col">
                 <div class="form-check form-switch">
-                  <label class="" for="">ON/OFF</label>
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
-
+                  <label class="card-font label-name-style" for="">ON/OFF</label>
+                    <input class="form-check-input toggle-style" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
                 </div>
               </div>
 
               {% if user.is_admin %}
                 <div class="col">
                   <div class="form-check form-switch">
-                    <label class="" for="">LOCK</label>
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
-
+                    <label class="card-font label-name-style" for="">LOCK</label>
+                    <input class="form-check-input toggle-style" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
                   </div>
                 </div>
               {% endif %}
@@ -58,26 +61,26 @@
 
         {% else %}
           <div class="card-body">
-            <h5 class="card-title text-center">ROOM NO: {{room.room_id}}</h5>
+            <h5 class="card-title text-center card-font">ROOM NO: {{room.room_id}}</h5>
           </div>
          {% for ac in  room|rooms_ac:request.user %}
           <ul class="list-group list-group-flush">
           <li class="list-group-item">
             <div class="row">
               <div class="col">
-                <label class="h6" for="">{{ ac.name }}</label>
+                <label class="h6 card-font" for="">{{ ac.name }}</label>
               </div>
 
               <div class="col">
                 <div class="form-check form-switch">
-                  <label class="" for="">ON/OFF</label>
+                  <label class="card-font label-name-style" for="">ON/OFF</label>
                   {% if ac.lock and not user.is_admin %}
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
+                    <input class="form-check-input toggle-style" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
                   {% else %}
                     {% if ac.ac_esp %}
-                       <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked onclick="acToggle(this, 'ac_esp')" value={{ ac.ac_uuid }}>
+                       <input class="form-check-input toggle-style" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked onclick="acToggle(this, 'ac_esp')" value={{ ac.ac_uuid }}>
                     {% else %}
-                      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onclick="acToggle(this, 'ac_esp')" value={{ ac.ac_uuid }}>
+                      <input class="form-check-input toggle-style" type="checkbox" role="switch" id="flexSwitchCheckDefault" onclick="acToggle(this, 'ac_esp')" value={{ ac.ac_uuid }}>
                     {% endif %}
                   {% endif %}
                 </div>
@@ -86,11 +89,11 @@
               {% if user.is_admin %}
                 <div class="col">
                   <div class="form-check form-switch">
-                    <label class="" for="">LOCK</label>
+                    <label class="card-font label-name-style" for="">LOCK</label>
                     {% if ac.lock %}
-                      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked onclick="acToggle(this, 'ac_lock')" value={{ ac.ac_uuid }}>
+                      <input class="form-check-input toggle-style" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked onclick="acToggle(this, 'ac_lock')" value={{ ac.ac_uuid }}>
                     {% else %}
-                      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onclick="acToggle(this, 'ac_lock')" value={{ ac.ac_uuid }}>
+                      <input class="form-check-input toggle-style" type="checkbox" role="switch" id="flexSwitchCheckDefault" onclick="acToggle(this, 'ac_lock')" value={{ ac.ac_uuid }}>
                     {% endif %}
                   </div>
                 </div>

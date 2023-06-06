@@ -1,29 +1,38 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %} Login {% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/account_style.css' %}">
+
 <div class="row">
   <div class="col-md-6 offset-md-3">
     {% include 'includes/messages.html' %}
   </div>
 </div>
 
-<br><br><br><br>
-<div class="container" >
-    <form method="post" action="{% url 'login' %}">
+  <div class="custom-container">
+    <div class="login form">
+        <div class="logo" >
+            <img src="{% static 'img/ljku.jpg'  %}">
+        </div>
+      <header>Log in</header>
+      <form method="post" action="{% url 'login' %}">
       {% csrf_token %}
-        <div class="form-group">
-          <label for="exampleInputEmail1">Email address</label>
-          <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-        </div><br>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-        </div><br>
-        <button type="submit" class="btn btn-primary">Login</button>
-        <a href="{% url 'forgot-password' %}" style="text-decoration: none;" class="p-4">Forgot Password?</a>
+        <input type="text" placeholder="Enter your email" name="email">
+        <input type="password" placeholder="Enter your password" name="password">
+         <a href="{% url 'forgot-password' %}">Forgot password ?</a>
+        <input type="submit" class="button" value="Login">
       </form>
+      <div class="signup">
+        <span class="signup">Don't have an account ?
+          <a href="{% url 'signup' %}">
+            <label for="">Sign up</label>
+          </a>
+        </span>
+      </div>
+    </div>
   </div>
-
 {% endblock %}

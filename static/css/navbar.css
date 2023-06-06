@@ -1,0 +1,17 @@
+.logo{
+    text-align: center;
+    height: 0px;
+    margin-top: -17px;
+}
+.logo img{
+    width: 200px;
+    margin: 0 12px;
+    cursor: pointer;
+    left: -10px;
+    position: relative;
+}
+
+.nav-link {
+    font-size: larger;
+    /* font-weight: 300; */   
+}
