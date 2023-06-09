@@ -1,6 +1,10 @@
 from django import forms
 from .models import *
-from django.contrib.sites.shortcuts import get_current_site
+
+
+class UploadExcelForm(forms.Form):
+    excel_file = forms.FileField()
+
 
 class CircuitForm(forms.ModelForm):
     def clean(self):
@@ -32,6 +36,7 @@ class RoomForm(forms.ModelForm):
 
             if room_id and Room.objects.filter(room_id=room_id).exists():
                 raise forms.ValidationError({'room_id': f"{room_id} already exists"})
+
 
 class ACForm(forms.ModelForm):
     def clean(self):

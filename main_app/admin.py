@@ -3,12 +3,14 @@ from .forms import *
 
 
 class CircuitAdmin(admin.ModelAdmin):
+    change_list_template = 'admin/Circuit_change_list.html'
     form = CircuitForm
     list_display = ('panel_id', 'esp_id')
     search_fields = ['esp_id']
 
 
 class RoomAdmin(admin.ModelAdmin):
+    change_list_template = 'admin/Room_change_list.html'
     readonly_fields = ('user',)
     form = RoomForm
     list_display = ('room_id',)
@@ -16,6 +18,7 @@ class RoomAdmin(admin.ModelAdmin):
 
 
 class ACAdmin(admin.ModelAdmin):
+    change_list_template = 'admin/AC_change_list.html'
     readonly_fields = ('no', 'total_ac_working_hours')
     form = ACForm
     list_display = ('name', 'room', 'circuit', 'ac_esp', 'lock', 'total_ac_working_hours')

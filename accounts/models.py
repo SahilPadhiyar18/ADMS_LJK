@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
 import uuid
+from django.contrib.auth.hashers import make_password
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -64,7 +65,6 @@ class User(AbstractBaseUser):
     def __unicode__(self):
         return self.user_id
 
-
     def __str__(self):
         return self.username
     
@@ -83,3 +83,8 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+    def save(self, *args, **kwargs):
+        if not self.password.startswith('pbkdf2_'):
+            self.password = make_password(self.password)
+        super().save(*args, **kwargs)

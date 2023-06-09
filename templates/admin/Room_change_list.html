@@ -1,0 +1,10 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools-items %}
+    {{ block.super }}
+    <li>
+        <a href="{% url 'room-data' %}" class="btn btn-default">
+            <span class="glyphicon glyphicon-upload"> Upload Excel</span>
+        </a>
+    </li>
+{% endblock %}

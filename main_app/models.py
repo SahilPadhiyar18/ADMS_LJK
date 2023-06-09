@@ -69,7 +69,7 @@ class AC(models.Model):
     name = models.CharField(max_length=255, unique=True)
     ac_esp = models.BooleanField(default=False)
     lock = models.BooleanField(default=False)
-    ping = models.DateTimeField()
+    ping = models.DateTimeField(blank=True, null=True)
     status = models.BooleanField(default=False)
     no = models.IntegerField(blank=True, null=True)
     total_ac_working_hours = models.DurationField(null=True, blank=True, default=datetime.timedelta(hours=0, minutes=0, seconds=0))
