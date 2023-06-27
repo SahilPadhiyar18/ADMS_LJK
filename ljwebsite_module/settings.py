@@ -87,7 +87,8 @@ DATABASES = {
         'NAME': config('DB_NAME'),
         'HOST': config('DB_HOST'),
         'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD')
+        'PASSWORD': config('DB_PASSWORD'),
+        'PORT': config('DB_PORT')
     }
 
     #comment above config for DB and uncomment below config and make db sqlite file and run locally
