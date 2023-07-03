@@ -20,8 +20,8 @@ urlpatterns = [
 ]
 
 
-# thread_one = threading.Thread(target=loop_thread)
+thread_one = threading.Thread(target=loop_thread)
 
-# thread_one.daemon = True
+thread_one.daemon = True
 
-# thread_one.start()
+thread_one.start()
