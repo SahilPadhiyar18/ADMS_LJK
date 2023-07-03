@@ -61,17 +61,17 @@ def acupdate(request):
             ac3cur = request.GET['ac3cur']
             if AC.objects.filter(circuit__esp_id=esp_id, no=1).exists():
                 ac1 = AC.objects.get(circuit__esp_id=esp_id, no=1)
-                ac1.ac_esp = bool(request.GET['ac1'])
+                ac1.ac_esp = bool(int(request.GET['ac1']))
                 ac1.ping = timezone.localtime()
                 ac1.save()
             if AC.objects.filter(circuit__esp_id=esp_id, no=2).exists():
                 ac2 = AC.objects.get(circuit__esp_id=esp_id, no=2)
-                ac2.ac_esp = bool(request.GET['ac2'])
+                ac2.ac_esp = bool(int(request.GET['ac2']))
                 ac2.ping = timezone.localtime()
                 ac2.save()
             if AC.objects.filter(circuit__esp_id=esp_id, no=3).exists():
                 ac3 = AC.objects.get(circuit__esp_id=esp_id, no=3)
-                ac3.ac_esp = bool(request.GET['ac3'])
+                ac3.ac_esp = bool(int(request.GET['ac3']))
                 ac3.ping = timezone.localtime()
                 ac3.save()
             print('all acs are updated successfully')
