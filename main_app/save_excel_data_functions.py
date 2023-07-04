@@ -123,6 +123,7 @@ def save_user_room_assign_data_db(request):
 
                         if room_obj and user_obj and duration:
                             user_room_assign = UserRoomAssign(user=user_obj, room=room_obj, duration=duration_field)
+                            checked_room_assign_obj(user_obj, room_obj, duration)
                             user_room_assign.save()
 
                 except Exception as e:
@@ -171,3 +172,31 @@ def get_duration_format(duration_str):
     duration = datetime.strptime(duration_str, '%H:%M:%S')
     duration = timedelta(hours=duration.hour, minutes=duration.minute, seconds=duration.second)
     return duration
+
+
+def checked_room_assign_obj(user, room, duration):
+    if not user:
+        return
+    elif room is None:
+        return
+    elif duration is None:
+        return
+
+    elif room and duration and user:
+        if user.is_admin:
+            return
+        if UserRoomAssign.objects.filter(room=room, user=user):
+            for user_room in UserRoomAssign.objects.filter(room=room, user=user):
+                user_room.delete()
+
+        if not user.is_admin:
+            room_duration_over = RoomDurationOver.objects.filter(user=user, room=room)
+            if room_duration_over:
+                for room_dur_obj in room_duration_over:
+                    room_dur_obj.delete()
+
+            new_room_duration_over = RoomDurationOver(user=user, room=room, duration=duration, remain_duration=duration,
+                                                      is_time_over=False)
+            new_room_duration_over.save()
+
+        room.user.add(user)

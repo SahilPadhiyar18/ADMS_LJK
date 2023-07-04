@@ -25,34 +25,6 @@ class UserRoomAssign(models.Model):
         self.created_at = timezone.localtime(self.created_at)
         self.updated_at = timezone.localtime(timezone.now())
         self.remain_duration = self.duration
-
-        if not self.user:
-            return
-        elif self.room is None:
-            return
-        elif self.duration is None:
-            return
-
-        elif self.room and self.duration and self.user:
-            if self.user.is_admin:
-                return
-
-            if UserRoomAssign.objects.filter(room=self.room, user=self.user).exists():
-                user_room = UserRoomAssign.objects.get(room=self.room, user=self.user)
-                if user_room.duration != self.duration:
-                    user_room.delete()
-
-            if not self.user.is_admin:
-                room_duration_over = RoomDurationOver.objects.filter(user=self.user, room=self.room).exists()
-                if room_duration_over:
-                    room_dur_obj = RoomDurationOver.objects.get(user=self.user, room=self.room)
-                    room_dur_obj.delete()
-
-                new_room_duration_over = RoomDurationOver(user=self.user, room=self.room, duration=self.duration, remain_duration=self.duration, is_time_over=False)
-                new_room_duration_over.save()
-
-            self.room.user.add(self.user)
-
         super().save(*args, **kwargs)
 
     def delete(self, using=None, keep_parents=False):

@@ -25,16 +25,15 @@ class UserRoomAssignForm(forms.ModelForm):
             if user.is_admin:
                 raise forms.ValidationError({'user': 'can not assign duration to admin user'})
 
-            if UserRoomAssign.objects.filter(room=room, user=user).exists():
-                user_room = UserRoomAssign.objects.get(room=room, user=user)
-                if user_room.duration != duration:
+            if UserRoomAssign.objects.filter(room=room, user=user):
+                for user_room in UserRoomAssign.objects.filter(room=room, user=user):
                     user_room.delete()
 
             if not user.is_admin:
-                room_duration_over = RoomDurationOver.objects.filter(user=user, room=room).exists()
+                room_duration_over = RoomDurationOver.objects.filter(user=user, room=room)
                 if room_duration_over:
-                    room_dur_obj = RoomDurationOver.objects.get(user=user, room=room)
-                    room_dur_obj.delete()
+                    for room_dur_obj in room_duration_over:
+                         room_dur_obj.delete()
 
                 new_room_duration_over = RoomDurationOver(user=user, room=room, duration=duration, remain_duration=duration, is_time_over=False)
                 new_room_duration_over.save()
