@@ -23,3 +23,13 @@ def room_color(room, user):
             return status
     except Exception as e:
         print(e)
+
+@register.filter
+def get_remain_time(room, user):
+    try:
+        user_room_assign = UserRoomAssign.objects.get(user=user, room=room)
+        remain_duration = user_room_assign.remain_duration
+        duration = remain_duration - datetime.timedelta(microseconds=remain_duration.microseconds)
+        return duration
+    except Exception as e:
+        print(e)

@@ -62,6 +62,9 @@
         {% else %}
           <div class="card-body">
             <h5 class="card-title text-center card-font">ROOM NO: {{room.room_id}}</h5>
+            {% if not user.is_admin %}
+              <small class="text-muted text-center">Remain Duration: {{room|get_remain_time:request.user}} </small>
+            {% endif %}
           </div>
          {% for ac in  room|rooms_ac:request.user %}
           <ul class="list-group list-group-flush">

@@ -107,8 +107,8 @@ def delete_user_ac_after_off_status(ac):
                     room_duration_over.remain_duration = room_duration_over.remain_duration - (ac_assign_obj.get_endTime() - ac_assign_obj.get_startTime())
                     room_duration_over.save()
 
-                    room_assign.remain_duration = room_duration_over.remain_duration
-                    room_assign.save()
+                    update_remain_duration(ac_assign_obj.user, ac_assign_obj.room, room_duration_over.remain_duration)
+
             except Exception as e:
                 print(f"Exception in delete_user_ac_after_off_status function: {e}")
 
@@ -152,8 +152,7 @@ def user_assign_duration_calculation():
                             user_ac.ac.save()
                             user_ac.delete()
 
-                            user_room.remain_duration = room_duration_over.remain_duration
-                            user_room.save()
+                            update_remain_duration(user, user_room.room, room_duration_over.remain_duration)
 
                             if room_duration_over.remain_duration <= datetime.timedelta(hours=0, minutes=0, seconds=0):
                                 room_duration_over.is_time_over = True
@@ -164,6 +163,13 @@ def user_assign_duration_calculation():
                             change_log_status_after_time_over(user_ac.ac)
     except Exception as e:
         print(f"Exception occur in user_assign_duration_calculation function: {e}")
+
+
+def update_remain_duration(user, room, remain_duration):
+    try:
+        UserRoomAssign.objects.filter(user=user, room=room).update(remain_duration=remain_duration)
+    except Exception as e:
+        print(f'Exception Ocuur in update_remain_duration function: {e}')
 
 
 def change_log_status_after_time_over(ac):

@@ -123,8 +123,9 @@ def save_user_room_assign_data_db(request):
 
                         if room_obj and user_obj and duration:
                             user_room_assign = UserRoomAssign(user=user_obj, room=room_obj, duration=duration_field)
-                            checked_room_assign_obj(user_obj, room_obj, duration)
-                            user_room_assign.save()
+                            is_created_obj = checked_room_assign_obj(user_obj, room_obj, duration)
+                            if is_created_obj:
+                                user_room_assign.save()
 
                 except Exception as e:
                     print(f'Exception occur in save_circuit_data_db function: {e}')
@@ -175,16 +176,17 @@ def get_duration_format(duration_str):
 
 
 def checked_room_assign_obj(user, room, duration):
+    is_created_obj = False
     if not user:
-        return
+        return is_created_obj
     elif room is None:
-        return
+        return is_created_obj
     elif duration is None:
-        return
+        return is_created_obj
 
     elif room and duration and user:
         if user.is_admin:
-            return
+            return is_created_obj
         if UserRoomAssign.objects.filter(room=room, user=user):
             for user_room in UserRoomAssign.objects.filter(room=room, user=user):
                 user_room.delete()
@@ -199,4 +201,8 @@ def checked_room_assign_obj(user, room, duration):
                                                       is_time_over=False)
             new_room_duration_over.save()
 
+            is_created_obj = True
+
         room.user.add(user)
+
+        return is_created_obj
