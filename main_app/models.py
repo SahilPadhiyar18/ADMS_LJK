@@ -66,7 +66,7 @@ class AC(models.Model):
     ac_uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
     room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True, blank=True)
     circuit = models.ForeignKey(Circuit, on_delete=models.CASCADE, null=True, blank=True)
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
     ac_esp = models.BooleanField(default=False)
     lock = models.BooleanField(default=False)
     ping = models.DateTimeField(blank=True, null=True)
