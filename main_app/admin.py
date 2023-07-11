@@ -21,7 +21,7 @@ class ACAdmin(admin.ModelAdmin):
     change_list_template = 'admin/AC_change_list.html'
     readonly_fields = ('total_ac_working_hours',)
     form = ACForm
-    list_display = ('name', 'room', 'circuit', 'ac_esp', 'lock', 'total_ac_working_hours')
+    list_display = ('name', 'room', 'circuit', 'ac_esp', 'lock', 'total_ac_working_hours', 'no')
     search_fields = ['name', 'room__room_id', 'circuit__esp_id']
 
 
