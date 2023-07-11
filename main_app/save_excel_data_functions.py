@@ -68,10 +68,11 @@ def save_ac_data_db(request):
                     room = str(row['room']).split('.')[0].upper() if row['room'] else None
                     circuit = str(row['circuit']).split('.')[0].upper() if row['circuit'] else None
                     name = str(row['name']).split('.')[0] if row['name'] else None
+                    no = str(row['no']).split('.')[0] if row['no'] else None
 
                     if (room and room != 'room' and room != 'nan' and room != 'NAN') and (
                             circuit and circuit != 'circuit' and circuit != 'nan' and circuit != 'NAN') and (
-                             name and name != 'name' and name != 'nan'):
+                             name and name != 'name' and name != 'nan') and (no and no != 'no' and no != 'nan' and room != 'NAN'):
 
                         room_obj, circuit_obj = None, None
 
@@ -81,7 +82,7 @@ def save_ac_data_db(request):
                             circuit_obj = Circuit.objects.get(esp_id=circuit)
 
                         if room_obj and circuit_obj and name:
-                            ac = AC(room=room_obj, circuit=circuit_obj, name=name)
+                            ac = AC(room=room_obj, circuit=circuit_obj, name=name, no=int(no))
                             ac.save()
 
                 except Exception as e:

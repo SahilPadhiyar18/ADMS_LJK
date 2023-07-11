@@ -94,7 +94,6 @@ class AC(models.Model):
 
         self.name = self.name.upper()
         if not is_new_obj:
-            self.no = AC.objects.filter(circuit=self.circuit).count() + 1
             if AC.objects.filter(room=self.room, circuit=self.circuit, name=self.name).exists():
                 return
             if AC.objects.filter(circuit=self.circuit).count() >= 3:
