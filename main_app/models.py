@@ -91,9 +91,12 @@ class AC(models.Model):
         self.updated_at = timezone.localtime(timezone.now())
 
         is_new_obj = AC.objects.filter(pk=self.pk).exists()
-        
+
+        self.name = self.name.upper()
         if not is_new_obj:
             self.no = AC.objects.filter(circuit=self.circuit).count() + 1
+            if AC.objects.filter(room=self.room, circuit=self.circuit, name=self.name).exists():
+                return
             if AC.objects.filter(circuit=self.circuit).count() >= 3:
                 return
             super().save(*args, **kwargs)
