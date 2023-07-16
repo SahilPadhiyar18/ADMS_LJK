@@ -49,9 +49,12 @@ class ACForm(forms.ModelForm):
             name = name.upper()
             circuit = self.cleaned_data['circuit']
             room = self.cleaned_data['room']
+            no = self.cleaned_data['no']
 
             if self.instance.name and self.instance.name != name:
                 return  # Skip validation if updating the same object
+            if self.instance.no != no:
+                return
 
             if name and AC.objects.filter(room=room, circuit=circuit, name=name).exists():
                 raise forms.ValidationError({'name': f"{name} already exists"})
