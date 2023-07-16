@@ -23,8 +23,10 @@
       <header>Sign up</header>
       <form method="post" enctype="multipart/form-data" action="{% url 'signup' %}">
       {% csrf_token %}
+        <input type="text" name="name" placeholder="Enter your name">
         <input type="text" name="username" placeholder="Enter your username">
         <input type="text" name="email" placeholder="Enter your email">
+        <input type="text" name="phone" placeholder="Enter your Phone no.">
         <input type="password" name="password1" placeholder="Create a password">
         <input type="password" name="password2" placeholder="Confirm your password">
         <input type="submit" class="button" value="Sign up">

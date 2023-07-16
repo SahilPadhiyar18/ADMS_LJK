@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import redirect
 # Create your views here.
 
+
 @login_required(login_url='login')
 def logs_view(request):
     if request.user.is_admin:

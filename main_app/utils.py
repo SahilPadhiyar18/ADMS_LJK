@@ -22,6 +22,8 @@ def save_logs_to_db(request, ac, field, status):
         else:
             log = Logs()   
 
+        log.room_name = ac.room.room_id
+
         ac_name = ac.name
         log.ac_name = ac_name
 

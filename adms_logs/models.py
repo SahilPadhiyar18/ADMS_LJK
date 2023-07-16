@@ -5,6 +5,7 @@ from django.utils import timezone
 
 
 class Logs(models.Model):
+    room_name = models.CharField(null=True, blank=True, max_length=100)
     ac_name = models.CharField(null=True, blank=True, max_length=100)
     task = models.CharField(null=True, blank=True, max_length=100)
     on_by = models.CharField(null=True, blank=True, max_length=100)

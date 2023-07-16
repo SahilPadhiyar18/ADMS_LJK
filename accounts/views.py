@@ -6,6 +6,7 @@ from django.contrib.auth.tokens import default_token_generator
 from ljwebsite_module.settings import *
 from .utils import *
 from django.utils.http import urlsafe_base64_decode
+from django.db.models import Q
 
 # Create your views here.
 
@@ -15,6 +16,10 @@ def user_login(request):
         if request.method == 'POST':
             email = request.POST['email']
             password = request.POST['password']
+
+            user_check = User.objects.filter(Q(username=email) | Q(name=email) | Q(email=email)).first()
+
+            email = user_check.email if user_check else None
 
             user = authenticate(email=email, password=password)
 
@@ -40,8 +45,10 @@ def user_login(request):
 def signUp(request):
     try:
         if request.method == 'POST':
+            name = request.POST['name']
             username = request.POST['username']
             email = request.POST['email']
+            phone = request.POST['phone']
             password1 = request.POST['password1']
             password2 = request.POST['password2']
             if User.objects.filter(username=username).exists():
@@ -53,6 +60,8 @@ def signUp(request):
             else:
                 if password1 == password2:
                     user = User.objects.create_user(username=username, email=email,  password=password1)
+                    user.name = name
+                    user.phone = phone
                     user.save()
                     messages.success(request, 'Account created successfully')
                     return redirect("login")
@@ -63,7 +72,6 @@ def signUp(request):
         return render(request, 'accounts/signup.html')
     except Exception as e:
         return render(request, 'accounts/signup.html')
-
 
 
 def user_logout(request):

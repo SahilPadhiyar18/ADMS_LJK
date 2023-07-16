@@ -33,3 +33,13 @@ def get_remain_time(room, user):
         return duration
     except Exception as e:
         print(e)
+
+
+@register.filter
+def get_ping_status(ping):
+    current_time = timezone.localtime()
+    if ping and current_time - timezone.localtime(ping) <= datetime.timedelta(minutes=2):
+        status = 'Online'
+    else:
+        status = 'Offline'
+    return status

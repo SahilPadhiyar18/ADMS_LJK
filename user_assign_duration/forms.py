@@ -38,6 +38,12 @@ class UserRoomAssignForm(forms.ModelForm):
                 new_room_duration_over = RoomDurationOver(user=user, room=room, duration=duration, remain_duration=duration, is_time_over=False)
                 new_room_duration_over.save()
 
+            if self.instance.room and self.instance.room != room:
+                self.instance.room.user.remove(user)
+
+            if self.instance.room and self.instance.user != user:
+                self.instance.room.user.remove(self.instance.user)
+
             room.user.add(user)
 
 

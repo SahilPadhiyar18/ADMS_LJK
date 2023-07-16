@@ -46,6 +46,7 @@ class User(AbstractBaseUser):
     )
 
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100, blank=True, null=True)
     username = models.CharField(max_length=200, unique=True)
     email = models.EmailField(
         verbose_name='Email',
@@ -54,6 +55,7 @@ class User(AbstractBaseUser):
     )
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=3)
     is_admin = models.BooleanField(default=False)
+    phone = models.CharField(max_length=12, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

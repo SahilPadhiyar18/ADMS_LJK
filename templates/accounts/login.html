@@ -21,7 +21,7 @@
       <header>Log in</header>
       <form method="post" action="{% url 'login' %}">
       {% csrf_token %}
-        <input type="text" placeholder="Enter your email" name="email">
+        <input type="text" placeholder="Enter your email/username/name" name="email">
         <input type="password" placeholder="Enter your password" name="password">
          <a href="{% url 'forgot-password' %}">Forgot password ?</a>
         <input type="submit" class="button" value="Login">

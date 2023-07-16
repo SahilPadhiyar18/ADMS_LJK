@@ -63,7 +63,9 @@
           <div class="card-body">
             <h5 class="card-title text-center card-font">ROOM NO: {{room.room_id}}</h5>
             {% if not user.is_admin %}
+              {% if room|get_remain_time:request.user %}
               <small class="text-muted text-center">Remain Duration: {{room|get_remain_time:request.user}} </small>
+              {% endif %}
             {% endif %}
           </div>
          {% for ac in  room|rooms_ac:request.user %}
@@ -106,8 +108,7 @@
             </div>
             <div class="row">
               <div class="col">
-                <small class="" for="">Ping:</small>
-                <small class="text-muted">{{ ac.ping }}</small>
+                <small class="" for="" style="color: red;">{{ ac.ping|get_ping_status }}</small>
               </div>
             </div>
           </li>
