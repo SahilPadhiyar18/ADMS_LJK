@@ -72,6 +72,7 @@ class AC(models.Model):
     ping = models.DateTimeField(blank=True, null=True)
     status = models.BooleanField(default=False)
     no = models.IntegerField(blank=True, null=True)
+    current = models.FloatField(blank=True,  null=True)
     total_ac_working_hours = models.DurationField(null=True, blank=True, default=datetime.timedelta(hours=0, minutes=0, seconds=0))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True) 

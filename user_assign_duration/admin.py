@@ -15,8 +15,8 @@ class UserRoomAssignAdmin(admin.ModelAdmin):
     def delete_queryset(self, request, queryset):
         for obj in queryset:
             obj.room.user.remove(obj.user)
-            if RoomDurationOver.objects.filter(user=obj.user, room=obj.room, duration=obj.duration).exists():
-                RoomDurationOver.objects.get(user=obj.user, room=obj.room, duration=obj.duration).delete()
+            for i in RoomDurationOver.objects.filter(user=obj.user, room=obj.room, duration=obj.duration):
+                i.delete()
         super().delete_queryset(request=request, queryset=queryset)
         return None
 

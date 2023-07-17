@@ -23,13 +23,15 @@
       {% csrf_token %}
         <input type="text" placeholder="Enter your email/username/name" name="email">
         <input type="password" placeholder="Enter your password" name="password">
-         <a href="{% url 'forgot-password' %}">Forgot password ?</a>
         <input type="submit" class="button" value="Login">
       </form>
       <div class="signup">
         <span class="signup">Don't have an account ?
           <a href="{% url 'signup' %}">
-            <label for="">Sign up</label>
+            <label for="">Sign up</label><br>
+
+          <a href="{% url 'forgot-password' %}">Forgot password ?</a>
+
           </a>
         </span>
       </div>

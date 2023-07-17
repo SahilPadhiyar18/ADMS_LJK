@@ -32,8 +32,8 @@ class UserRoomAssign(models.Model):
             self.room.user.remove(self.user)
             super().delete(using=using, keep_parents=keep_parents)
 
-            if RoomDurationOver.objects.filter(user=self.user, room=self.room, duration=self.duration).exists():
-                RoomDurationOver.objects.get(user=self.user, room=self.room, duration=self.duration).delete()
+            for i in RoomDurationOver.objects.filter(user=self.user, room=self.room, duration=self.duration):
+                i.delete()
 
         except Exception as e:
             print(f'Exception occur in delete method of UserRoomAssign model. {e}')

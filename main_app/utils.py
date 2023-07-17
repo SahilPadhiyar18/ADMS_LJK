@@ -9,7 +9,8 @@ def save_logs_to_db(request, ac, field, status):
     try:
         log_exist = False
         task_perform = False
-        
+        log = None
+
         if field == 'ac_esp':
             log = Logs.objects.filter(ac_name=ac.name).filter(task='ON/OFF').filter(on_time__isnull=False).filter(on_by__isnull=False). \
             filter(off_time__isnull=True).filter(off_by__isnull=True).last()
@@ -27,6 +28,12 @@ def save_logs_to_db(request, ac, field, status):
         ac_name = ac.name
         log.ac_name = ac_name
 
+        on_time = None
+        on_by = None
+        off_time = None
+        off_by = None
+        total_on_time = datetime.timedelta(seconds=0)
+
         if status:
             on_by = request.user.username
             on_time = ac.get_updated_at_time()
@@ -42,8 +49,8 @@ def save_logs_to_db(request, ac, field, status):
             log.status = 'OFF'
             task_perform = True
 
-        if log_exist and field == 'ac_esp' and task_perform:
-            total_on_time = off_time - log.on_time
+        if log_exist and field == 'ac_esp' and task_perform and off_time and off_by:
+            total_on_time = ac.get_updated_at_time() - log.on_time
             log.total_on_time = total_on_time
 
         if field == 'ac_esp' and task_perform:
@@ -72,7 +79,7 @@ def save_logs_to_db(request, ac, field, status):
 
         print('log successfully added/updated')
     except Exception as e:
-        print(f'getting log related errror {e} can not add/update log for {ac.name}')
+        print(f'getting log related error {e} can not add/update log for {ac.name}')
         print(f"Exception in save_logs_to_db function: {e}")
 
 
@@ -90,31 +97,33 @@ def make_user_ac_assign_obj(request, ac):
         print(f"Exception in make_user_ac_assign_obj function: {e}")
 
 
-def delete_user_ac_after_off_status(ac):
+def delete_user_ac_after_off_status(request, ac):
     try:
-        ac_assign_obj = UserACAssign.objects.filter(ac=ac).exists()
+        user = request.user
+        if not user.is_admin:
+            ac_assign_obj = UserACAssign.objects.filter(room=ac.room, ac=ac, user=user).exists()
 
-        if ac_assign_obj:
-            ac_assign_obj = UserACAssign.objects.get(ac=ac)
+            if ac_assign_obj:
+                ac_assign_obj = UserACAssign.objects.get(room=ac.room, ac=ac, user=user)
 
-            try:
-                room_assign = UserRoomAssign.objects.get(user=ac_assign_obj.user, room=ac_assign_obj.room)
-                room_duration_over = RoomDurationOver.objects.filter(room=room_assign.room,
-                                                                     duration=room_assign.duration,
-                                                                     is_time_over=False).exists()
-                if room_duration_over:
-                    room_duration_over = RoomDurationOver.objects.get(room=room_assign.room,
+                try:
+                    room_assign = UserRoomAssign.objects.get(user=user, room=ac_assign_obj.room)
+                    room_duration_over = RoomDurationOver.objects.filter(user=user, room=room_assign.room,
                                                                          duration=room_assign.duration,
-                                                                         is_time_over=False)
-                    room_duration_over.remain_duration = room_duration_over.remain_duration - (ac_assign_obj.get_endTime() - ac_assign_obj.get_startTime())
-                    room_duration_over.save()
+                                                                         is_time_over=False).exists()
+                    if room_duration_over:
+                        room_duration_over = RoomDurationOver.objects.get(user=user, room=room_assign.room,
+                                                                             duration=room_assign.duration,
+                                                                             is_time_over=False)
+                        room_duration_over.remain_duration = room_duration_over.remain_duration - (ac_assign_obj.get_endTime() - ac_assign_obj.get_startTime())
+                        room_duration_over.save()
 
-                    update_remain_duration(ac_assign_obj.user, ac_assign_obj.room, room_duration_over.remain_duration)
+                        update_remain_duration(user, ac_assign_obj.room, room_duration_over.remain_duration)
 
-            except Exception as e:
-                print(f"Exception in delete_user_ac_after_off_status function: {e}")
+                except Exception as e:
+                    print(f"Exception in delete_user_ac_after_off_status function: {e}")
 
-            ac_assign_obj.delete()
+                ac_assign_obj.delete()
 
     except Exception as e:
         print(f"Exception in delete_user_ac_after_off_status function: {e}")
@@ -171,7 +180,7 @@ def update_remain_duration(user, room, remain_duration):
     try:
         UserRoomAssign.objects.filter(user=user, room=room).update(remain_duration=remain_duration)
     except Exception as e:
-        print(f'Exception Ocuur in update_remain_duration function: {e}')
+        print(f'Exception Occur in update_remain_duration function: {e}')
 
 
 def change_log_status_after_time_over(ac):

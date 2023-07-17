@@ -10,7 +10,7 @@ from django.db.models import F
 
 @login_required(login_url='login')
 def home(request):
-    if request.user.is_admin:
+    if request.user.is_admin or request.user.user_type == 2:
         room_data = Room.objects.all()
     else:
         room_data = Room.objects.filter(user=request.user)    
@@ -40,7 +40,7 @@ def change_ac_status(request):
                 if status:
                     make_user_ac_assign_obj(request,  ac)
                 else:
-                    delete_user_ac_after_off_status(ac)
+                    delete_user_ac_after_off_status(request, ac)
 
                 save_logs_to_db(request, ac, field, status)
                 return redirect('home')
