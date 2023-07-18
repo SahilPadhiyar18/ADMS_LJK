@@ -108,7 +108,14 @@
             </div>
             <div class="row">
               <div class="col">
+                {% if ac.lock and not user.is_admin %}
+                <small class="" for="" style="color: red;">This AC is locked by Admin</small>
+                {% elif user.is_admin %}
                 <small class="" for="" style="color: red;">{{ ac.ping|get_ping_status }}</small>
+                <small class="" for="" style="color: red;">{{ ac.current }}</small>
+                {% else %}
+                <small class="" for="" style="color: red;">{{ ac.ping|get_ping_status }}</small>
+                {% endif %}                   
               </div>
             </div>
           </li>
