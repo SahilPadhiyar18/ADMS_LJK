@@ -36,11 +36,17 @@ def change_ac_status(request):
                     ac.ac_esp = status
                 elif field == 'ac_lock':
                     ac.lock = status
+
+                if field == 'ac_esp' and status:
+                    ac.last_on_by = request.user
+                if field == 'ac_esp' and not status:
+                    ac.last_off_by = request.user
+
                 ac.save()
                 if status:
-                    make_user_ac_assign_obj(request,  ac)
+                    make_user_ac_assign_obj(request, ac)
                 else:
-                    delete_user_ac_after_off_status(request, ac)
+                    delete_user_ac_after_off_status(ac)
 
                 save_logs_to_db(request, ac, field, status)
                 return redirect('home')

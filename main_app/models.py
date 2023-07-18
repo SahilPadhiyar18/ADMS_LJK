@@ -74,6 +74,8 @@ class AC(models.Model):
     no = models.IntegerField(blank=True, null=True)
     current = models.FloatField(blank=True,  null=True)
     total_ac_working_hours = models.DurationField(null=True, blank=True, default=datetime.timedelta(hours=0, minutes=0, seconds=0))
+    last_on_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True,  blank=True, related_name='last_on_by')
+    last_off_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='last_off_by')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True) 
 

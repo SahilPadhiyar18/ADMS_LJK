@@ -24,12 +24,15 @@ class UserRoomAssignForm(forms.ModelForm):
         elif room and duration and user:
             if user.is_admin:
                 raise forms.ValidationError({'user': 'can not assign duration to admin user'})
+            if user.user_type == 2:
+                raise forms.ValidationError({'user': 'can not assign duration to technician user'})
+
 
             if UserRoomAssign.objects.filter(room=room, user=user):
                 for user_room in UserRoomAssign.objects.filter(room=room, user=user):
                     user_room.delete()
 
-            if not user.is_admin:
+            if not user.is_admin and user.user_type != 2:
                 room_duration_over = RoomDurationOver.objects.filter(user=user, room=room)
                 if room_duration_over:
                     for room_dur_obj in room_duration_over:

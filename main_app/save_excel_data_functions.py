@@ -188,11 +188,14 @@ def checked_room_assign_obj(user, room, duration):
     elif room and duration and user:
         if user.is_admin:
             return is_created_obj
+        if user.user_type == 2:
+            return is_created_obj
+
         if UserRoomAssign.objects.filter(room=room, user=user):
             for user_room in UserRoomAssign.objects.filter(room=room, user=user):
                 user_room.delete()
 
-        if not user.is_admin:
+        if not user.is_admin and user.user_type != 2:
             room_duration_over = RoomDurationOver.objects.filter(user=user, room=room)
             if room_duration_over:
                 for room_dur_obj in room_duration_over:

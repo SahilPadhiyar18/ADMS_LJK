@@ -62,7 +62,7 @@
         {% else %}
           <div class="card-body">
             <h5 class="card-title text-center card-font">ROOM NO: {{room.room_id}}</h5>
-            {% if not user.is_admin %}
+            {% if not user.is_admin and user.user_type != 2 %}
               {% if room|get_remain_time:request.user %}
               <small class="text-muted text-center">Remain Duration: {{room|get_remain_time:request.user}} </small>
               {% endif %}
@@ -79,7 +79,7 @@
               <div class="col">
                 <div class="form-check form-switch">
                   <label class="card-font label-name-style" for="">ON/OFF</label>
-                  {% if ac.lock and not user.is_admin %}
+                  {% if ac.lock and not user.is_admin and user.user_type != 2 %}
                     <input class="form-check-input toggle-style" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
                   {% else %}
                     {% if ac.ac_esp %}

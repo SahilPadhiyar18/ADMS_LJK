@@ -86,25 +86,26 @@ def save_logs_to_db(request, ac, field, status):
 def make_user_ac_assign_obj(request, ac):
     try:
         user = request.user
-        if not user.is_admin:
+        if not user.is_admin and user.user_type != 2:
+            _user = ac.last_on_by
             room = ac.room
             duration = None
             startTime = timezone.localtime()
             endTime = timezone.localtime()
-            useracassign = UserACAssign(user=user, room=room, ac=ac, duration=duration, startTime=startTime, endTime=endTime)
+            useracassign = UserACAssign(user=_user, room=room, ac=ac, duration=duration, startTime=startTime, endTime=endTime)
             useracassign.save()
     except Exception as e:
         print(f"Exception in make_user_ac_assign_obj function: {e}")
 
 
-def delete_user_ac_after_off_status(request, ac):
+def delete_user_ac_after_off_status(ac):
     try:
-        user = request.user
-        if not user.is_admin:
+        user = ac.last_on_by
+        if user and not user.is_admin and user.user_type != 2:
             ac_assign_obj = UserACAssign.objects.filter(room=ac.room, ac=ac, user=user).exists()
 
             if ac_assign_obj:
-                ac_assign_obj = UserACAssign.objects.get(room=ac.room, ac=ac, user=user)
+                ac_assign_obj = UserACAssign.objects.filter(room=ac.room, ac=ac, user=user).last()
 
                 try:
                     room_assign = UserRoomAssign.objects.get(user=user, room=ac_assign_obj.room)
@@ -124,6 +125,10 @@ def delete_user_ac_after_off_status(request, ac):
                     print(f"Exception in delete_user_ac_after_off_status function: {e}")
 
                 ac_assign_obj.delete()
+        else:
+            user_ac_assing_obj = UserACAssign.objects.filter(room=ac.room, ac=ac, user=user)
+            for obj in user_ac_assing_obj:
+                obj.delete()
 
     except Exception as e:
         print(f"Exception in delete_user_ac_after_off_status function: {e}")
