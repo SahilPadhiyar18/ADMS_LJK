@@ -49,32 +49,65 @@ def change_ac_status(request):
                 return redirect('home')
     except Exception as e:
         print(f"Exception occur in change_ac_status function: {e}")
-        
 
+// ADD by sahil        
 def acupdate(request):
     try:
         esp_id = request.GET['espid']
+        print(esp_id)
         circuit = Circuit.objects.filter(esp_id=esp_id.upper()).exists()
         if circuit:
-            ac1cur = request.GET['ac1cur']
-            ac2cur = request.GET['ac2cur']
-            ac3cur = request.GET['ac3cur']
             if AC.objects.filter(circuit__esp_id=esp_id, no=1).exists():
                 ac1 = AC.objects.get(circuit__esp_id=esp_id, no=1)
                 ac1.status = bool(int(request.GET['ac1']))
                 ac1.ping = timezone.localtime()
+                ac1.current = request.GET['ac1cur']
                 ac1.save()
             if AC.objects.filter(circuit__esp_id=esp_id, no=2).exists():
                 ac2 = AC.objects.get(circuit__esp_id=esp_id, no=2)
                 ac2.status = bool(int(request.GET['ac2']))
                 ac2.ping = timezone.localtime()
+                ac2.current = request.GET['ac2cur']
                 ac2.save()
             if AC.objects.filter(circuit__esp_id=esp_id, no=3).exists():
                 ac3 = AC.objects.get(circuit__esp_id=esp_id, no=3)
                 ac3.status = bool(int(request.GET['ac3']))
                 ac3.ping = timezone.localtime()
+                ac3.current = request.GET['ac3cur']
                 ac3.save()
             print('all acs are updated successfully')
+            # return HttpResponse("Please Register your 1")
             return JsonResponse(list(AC.objects.filter(circuit__esp_id=esp_id).values('no', value=F('ac_esp'))), safe=False)
+        else:
+            return HttpResponse("Please Register your Self")
     except Exception as e:
-        print(f"Exception occur in acupdate function: {e}")
+        # print("PASS")
+        return HttpResponse("Error")
+
+# def acupdate(request):
+#     try:
+#         esp_id = request.GET['espid']
+#         circuit = Circuit.objects.filter(esp_id=esp_id.upper()).exists()
+#         if circuit:
+#             ac1cur = request.GET['ac1cur']
+#             ac2cur = request.GET['ac2cur']
+#             ac3cur = request.GET['ac3cur']
+#             if AC.objects.filter(circuit__esp_id=esp_id, no=1).exists():
+#                 ac1 = AC.objects.get(circuit__esp_id=esp_id, no=1)
+#                 ac1.status = bool(int(request.GET['ac1']))
+#                 ac1.ping = timezone.localtime()
+#                 ac1.save()
+#             if AC.objects.filter(circuit__esp_id=esp_id, no=2).exists():
+#                 ac2 = AC.objects.get(circuit__esp_id=esp_id, no=2)
+#                 ac2.status = bool(int(request.GET['ac2']))
+#                 ac2.ping = timezone.localtime()
+#                 ac2.save()
+#             if AC.objects.filter(circuit__esp_id=esp_id, no=3).exists():
+#                 ac3 = AC.objects.get(circuit__esp_id=esp_id, no=3)
+#                 ac3.status = bool(int(request.GET['ac3']))
+#                 ac3.ping = timezone.localtime()
+#                 ac3.save()
+#             print('all acs are updated successfully')
+#             return JsonResponse(list(AC.objects.filter(circuit__esp_id=esp_id).values('no', value=F('ac_esp'))), safe=False)
+#     except Exception as e:
+#         print(f"Exception occur in acupdate function: {e}")
