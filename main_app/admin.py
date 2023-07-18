@@ -23,6 +23,7 @@ class ACAdmin(admin.ModelAdmin):
     form = ACForm
     list_display = ('name', 'room', 'circuit', 'ac_esp', 'lock', 'total_ac_working_hours', 'no')
     search_fields = ['name', 'room__room_id', 'circuit__esp_id']
+    exclude = ['last_on_by', 'last_off_by']
 
 
 # Register your models here.
